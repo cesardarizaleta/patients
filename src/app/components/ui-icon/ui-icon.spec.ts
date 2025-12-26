@@ -13,6 +13,7 @@ describe('UiIcon', () => {
 
     fixture = TestBed.createComponent(UiIcon);
     component = fixture.componentInstance;
+    component.name.set('Edit'); // Provide required name input
     fixture.detectChanges();
   });
 
