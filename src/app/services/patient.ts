@@ -33,7 +33,8 @@ export class PatientService {
     const db = this.dbService.getDb();
     if (!db) throw new Error('Database not initialized');
 
-    const result = db.exec('SELECT * FROM patients WHERE id = ?', [id]);
+    const numericId = Number(id);
+    const result = db.exec('SELECT * FROM patients WHERE id = ?', [numericId]);
     if (result.length === 0 || result[0].values.length === 0) return null;
 
     const row = result[0].values[0] as any[];
@@ -116,13 +117,32 @@ export class PatientService {
     const db = this.dbService.getDb();
     if (!db) throw new Error('Database not initialized');
 
-    const result = db.run('DELETE FROM patients WHERE id = ?', [id]);
-    const deleted = result.changes > 0;
+    // Convertir ID a número para asegurar el tipo correcto
+    const numericId = Number(id);
 
-    if (deleted) {
-      await this.dbService.persist();
+    // Verificar que el paciente existe ANTES de eliminar
+    const checkResult = db.exec('SELECT id FROM patients WHERE id = ? LIMIT 1', [numericId]);
+    const existsBefore = checkResult.length > 0 && checkResult[0].values.length > 0;
+
+    if (!existsBefore) {
+      return false;
     }
 
-    return deleted;
+    // Ejecutar la eliminación
+    db.run('DELETE FROM patients WHERE id = ?', [numericId]);
+
+    // Verificar que el paciente ya NO existe DESPUÉS de eliminar
+    const verifyResult = db.exec('SELECT id FROM patients WHERE id = ? LIMIT 1', [numericId]);
+    const existsAfter = verifyResult.length > 0 && verifyResult[0].values.length > 0;
+
+    const deleted = !existsAfter;
+
+    if (deleted) {
+      // Persistir cambios
+      await this.dbService.persist();
+      return true;
+    }
+
+    return false;
   }
 }

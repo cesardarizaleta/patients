@@ -58,19 +58,33 @@ export class DatabaseService {
     const data = this.db.export();
     const request = indexedDB.open('PatientsDB', 1);
 
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains('sqlite')) {
-        db.createObjectStore('sqlite');
-      }
-    };
+    return new Promise((resolve, reject) => {
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        if (!db.objectStoreNames.contains('sqlite')) {
+          db.createObjectStore('sqlite');
+        }
+      };
 
-    request.onsuccess = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      const transaction = db.transaction(['sqlite'], 'readwrite');
-      const store = transaction.objectStore('sqlite');
-      store.put(data, 'patients.sqlite');
-    };
+      request.onsuccess = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        const transaction = db.transaction(['sqlite'], 'readwrite');
+        const store = transaction.objectStore('sqlite');
+        const putRequest = store.put(data, 'patients.sqlite');
+
+        putRequest.onsuccess = () => {
+          resolve();
+        };
+
+        putRequest.onerror = () => {
+          reject(putRequest.error);
+        };
+      };
+
+      request.onerror = () => {
+        reject(request.error);
+      };
+    });
   }
 
   private async loadFromIndexedDB(): Promise<Uint8Array | null> {

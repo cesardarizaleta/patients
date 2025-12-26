@@ -78,18 +78,18 @@ export class PatientForm implements OnInit {
       }
 
       this.saved.emit(savedPatient);
-      this.toast.push('Patient saved', 'success');
+      this.toast.push('Paciente guardado', 'success');
     } catch (error: any) {
       console.error('Error saving patient:', error);
       if (error.message && error.message.includes('UNIQUE constraint failed: patients.email')) {
         await this.modal.alert(
-          'Duplicate email',
-          'A patient with this email already exists. Please use a different email.',
+          'Correo electrónico duplicado',
+          'Ya existe un paciente con este correo electrónico. Por favor use un correo diferente.',
         );
-        this.toast.push('Duplicate email', 'error');
+        this.toast.push('Correo electrónico duplicado', 'error');
       } else {
-        await this.modal.alert('Save error', 'Error saving patient. Please try again.');
-        this.toast.push('Save failed', 'error');
+        await this.modal.alert('Error al guardar', 'Error al guardar el paciente. Por favor inténtelo de nuevo.');
+        this.toast.push('Guardado fallido', 'error');
       }
     } finally {
       this.loading.set(false);

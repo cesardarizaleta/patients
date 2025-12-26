@@ -35,7 +35,7 @@ export class Patients {
         saved: (patient: Patient) => {
           this.modal.close();
           this.reloadTrigger.update((v) => v + 1);
-          this.toast.push('Patient created successfully', 'success');
+          this.toast.push('Paciente creado exitosamente', 'success');
         },
         cancelled: () => {
           this.modal.close();
@@ -52,7 +52,7 @@ export class Patients {
         saved: (savedPatient: Patient) => {
           this.modal.close();
           this.reloadTrigger.update((v) => v + 1);
-          this.toast.push('Patient updated successfully', 'success');
+          this.toast.push('Paciente actualizado exitosamente', 'success');
         },
         cancelled: () => {
           this.modal.close();
@@ -73,7 +73,7 @@ export class Patients {
       if (this.exportFormat === 'sqlite') {
         const data = this.dbService.exportDatabase();
         if (!data) {
-          this.toast.push('No database to export', 'error');
+          this.toast.push('No hay base de datos para exportar', 'error');
           return;
         }
         // create blob and download
@@ -87,30 +87,30 @@ export class Patients {
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-        this.toast.push('Database exported', 'success');
+        this.toast.push('Base de datos exportada', 'success');
         return;
       }
 
       // fetch data
   const patients = await this.patientService.getAllPatients();
       if (!patients || patients.length === 0) {
-        this.toast.push('No patients to export', 'error');
+        this.toast.push('No hay pacientes para exportar', 'error');
         return;
       }
 
       if (this.exportFormat === 'excel') {
         await this.exporter.exportExcel(patients);
-        this.toast.push('Excel exported', 'success');
+        this.toast.push('Excel exportado', 'success');
       } else if (this.exportFormat === 'csv') {
         await this.exporter.exportCsv(patients);
-        this.toast.push('CSV exported', 'success');
+        this.toast.push('CSV exportado', 'success');
       } else if (this.exportFormat === 'pdf') {
         await this.exporter.exportPdf(patients);
-        this.toast.push('PDF exported', 'success');
+        this.toast.push('PDF exportado', 'success');
       }
     } catch (err) {
       console.error('Export error', err);
-      this.toast.push('Export failed', 'error');
+      this.toast.push('Exportación fallida', 'error');
     }
   }
 
@@ -118,7 +118,7 @@ export class Patients {
     try {
       const data = this.dbService.exportDatabase();
       if (!data) {
-        this.toast.push('No database to export', 'error');
+        this.toast.push('No hay base de datos para exportar', 'error');
         return;
       }
 
@@ -133,10 +133,10 @@ export class Patients {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      this.toast.push('Database exported', 'success');
+      this.toast.push('Base de datos exportada', 'success');
     } catch (err) {
       console.error('Export error', err);
-      this.toast.push('Export failed', 'error');
+      this.toast.push('Exportación fallida', 'error');
     }
   }
 
@@ -147,12 +147,12 @@ export class Patients {
     try {
       const buf = await file.arrayBuffer();
       await this.dbService.importDatabase(new Uint8Array(buf));
-      this.toast.push('Database imported', 'success');
+      this.toast.push('Base de datos importada', 'success');
       // refresh lists
       this.reloadTrigger.update((v) => v + 1);
     } catch (err) {
       console.error('Import error', err);
-      this.toast.push('Import failed', 'error');
+      this.toast.push('Importación fallida', 'error');
     } finally {
       // clear input so same file can be re-selected
       input.value = '';

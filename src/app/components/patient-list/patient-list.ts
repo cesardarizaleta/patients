@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, inject, input, OnInit, output, signal, computed } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Patient } from '../../models/patient';
 import { PatientService } from '../../services/patient';
@@ -17,6 +17,23 @@ export class PatientList implements OnInit {
 
   patients = signal<Patient[]>([]);
   loading = signal(false);
+  searchTerm = signal('');
+
+  filteredPatients = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    if (!term) return this.patients();
+    return this.patients().filter(patient => {
+      return Object.values(patient).some(value => {
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(term);
+        }
+        if (value instanceof Date) {
+          return value.toLocaleDateString().toLowerCase().includes(term);
+        }
+        return false;
+      });
+    });
+  });
 
   reloadTrigger = input<number>(0);
 
@@ -48,16 +65,38 @@ export class PatientList implements OnInit {
 
   async deletePatient(id: number): Promise<void> {
     try {
+      if (!id || isNaN(id) || id <= 0) {
+        await this.modal.alert('Error', 'ID de paciente inválido');
+        return;
+      }
+
       const ok = await this.modal.confirm(
-        'Delete patient',
-        'Are you sure you want to delete this patient?',
+        'Eliminar paciente',
+        '¿Está seguro de que desea eliminar este paciente?',
       );
       if (!ok) return;
-      await this.patientService.deletePatient(id);
-      await this.loadPatients();
+
+      // Verificar que el paciente existe antes de intentar eliminarlo
+      const existingPatient = await this.patientService.getPatientById(id);
+      if (!existingPatient) {
+        await this.modal.alert('Error', 'El paciente no existe o ya fue eliminado');
+        await this.loadPatients(); // Recargar la lista por si acaso
+        return;
+      }
+
+      const deleted = await this.patientService.deletePatient(id);
+      if (deleted) {
+        // Pequeño delay para asegurar que la persistencia se complete
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await this.loadPatients();
+        // Mostrar mensaje de éxito
+        await this.modal.alert('Éxito', 'Paciente eliminado correctamente');
+      } else {
+        await this.modal.alert('Error', 'No se pudo eliminar el paciente de la base de datos');
+      }
     } catch (error) {
       console.error('Error deleting patient:', error);
-      await this.modal.alert('Error', 'Could not delete patient');
+      await this.modal.alert('Error', 'No se pudo eliminar el paciente');
     }
   }
 

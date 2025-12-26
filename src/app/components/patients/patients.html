@@ -2,25 +2,25 @@
   <header class="panel" style="margin-bottom: 24px">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <div>
-        <h1>Patients</h1>
-        <div class="muted">Local Database Management</div>
+        <h1>Pacientes</h1>
+        <div class="muted">Gestión de Base de Datos Local</div>
       </div>
       <div style="display: flex; gap: 12px; align-items: center">
         <div style="display:flex; align-items:center; gap:8px">
           <select id="exportSelect" (change)="onExportSelect($event)" class="btn">
-            <option value="excel">Export as Excel</option>
-            <option value="csv">Export as CSV</option>
-            <option value="pdf">Export as PDF</option>
-            <option value="sqlite">Export DB (.sqlite)</option>
+            <option value="excel">Exportar como Excel</option>
+            <option value="csv">Exportar como CSV</option>
+            <option value="pdf">Exportar como PDF</option>
+            <option value="sqlite">Exportar BD (.sqlite)</option>
           </select>
           <button class="btn" (click)="triggerExport()">
             <app-ui-icon name="Download" size="16" class="mr-2"></app-ui-icon>
-            <span>Export</span>
+            <span>Exportar</span>
           </button>
         </div>
         <label class="btn" for="importDbInput" style="margin: 0; cursor: pointer">
           <app-ui-icon name="Upload" size="16" class="mr-2"></app-ui-icon>
-          <span>Import</span>
+          <span>Importar</span>
         </label>
         <input
           id="importDbInput"
@@ -40,7 +40,7 @@
   >
   </app-patient-list>
 
-  <button class="fab" title="Add patient" (click)="onAddPatient()">
+  <button class="fab" title="Agregar paciente" (click)="onAddPatient()">
     <app-ui-icon name="Plus" size="20"></app-ui-icon>
   </button>
 </div>

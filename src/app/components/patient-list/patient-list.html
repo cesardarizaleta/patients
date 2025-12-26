@@ -1,17 +1,30 @@
 <div class="list-container">
   @if (loading()) {
     <div class="panel" style="text-align: center">
-      <p class="muted">Loading records...</p>
+      <p class="muted">Cargando registros...</p>
     </div>
   } @else {
-    @if (patients().length === 0) {
+    <div class="search-container" style="margin-bottom: 16px;">
+      <input
+        type="text"
+        placeholder="Buscar pacientes..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+        style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+      />
+    </div>
+    @if (filteredPatients().length === 0 && patients().length > 0) {
       <div class="panel" style="text-align: center; padding: 48px">
-        <div class="muted" style="font-size: 1.1rem; margin-bottom: 16px">No patients found</div>
-        <button class="btn btn-primary" (click)="onAddPatient()">Create your first patient</button>
+        <div class="muted" style="font-size: 1.1rem;">No se encontraron pacientes que coincidan con la búsqueda</div>
+      </div>
+    } @else if (patients().length === 0) {
+      <div class="panel" style="text-align: center; padding: 48px">
+        <div class="muted" style="font-size: 1.1rem; margin-bottom: 16px">No se encontraron pacientes</div>
+        <button class="btn btn-primary" (click)="onAddPatient()">Crear tu primer paciente</button>
       </div>
     } @else {
       <div class="cards">
-        @for (patient of patients(); track patient.id) {
+        @for (patient of filteredPatients(); track patient.id) {
           <div class="card">
             <div
               style="
@@ -54,10 +67,10 @@
 
             <div style="display: flex; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 12px">
               <button class="btn" style="flex: 1" (click)="onEditPatient(patient)">
-                <app-ui-icon name="Edit" size="14" class="mr-1"></app-ui-icon> Edit
+                <app-ui-icon name="Edit" size="14" class="mr-1"></app-ui-icon> Editar
               </button>
               <button class="btn btn-danger" style="flex: 1" (click)="deletePatient(patient.id!)">
-                <app-ui-icon name="Trash2" size="14" class="mr-1"></app-ui-icon> Delete
+                <app-ui-icon name="Trash2" size="14" class="mr-1"></app-ui-icon> Eliminar
               </button>
             </div>
           </div>
