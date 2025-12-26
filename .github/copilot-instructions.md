@@ -45,3 +45,21 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+## Development Workflow
+
+- Always use Angular CLI commands (`ng generate`) for creating components, services, guards, interceptors, and other Angular artifacts
+- Use commands whenever possible instead of manually creating files
+- Examples:
+  - `ng generate component <name>` for components
+  - `ng generate service <name>` for services
+  - `ng generate guard <name>` for route guards
+  - `ng generate interceptor <name>` for HTTP interceptors
+
+## SOLID Principles
+
+- **Single Responsibility Principle (SRP)**: Each class should have only one reason to change. Keep components, services, and classes focused on a single responsibility.
+- **Open-Closed Principle (OCP)**: Software entities should be open for extension but closed for modification. Use inheritance and interfaces to extend functionality without modifying existing code.
+- **Liskov Substitution Principle (LSP)**: Subtypes must be substitutable for their base types. Ensure derived classes can replace base classes without altering program correctness.
+- **Interface Segregation Principle (ISP)**: Clients should not be forced to depend on interfaces they do not use. Create specific interfaces rather than general-purpose ones.
+- **Dependency Inversion Principle (DIP)**: High-level modules should not depend on low-level modules. Both should depend on abstractions. Use dependency injection and interfaces to decouple dependencies.
