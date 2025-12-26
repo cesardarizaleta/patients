@@ -1,0 +1,74 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div style="margin-bottom: 24px">
+    <h2 style="font-size: 1.25rem; margin: 0">{{ patient() ? 'Edit Patient' : 'New Patient' }}</h2>
+    <p class="muted" style="margin: 4px 0 0 0">Fill in the information below</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+    <div class="form-row">
+      <label for="firstName">First name</label>
+      <input id="firstName" type="text" formControlName="firstName" placeholder="Jane" required />
+    </div>
+
+    <div class="form-row">
+      <label for="lastName">Last name</label>
+      <input id="lastName" type="text" formControlName="lastName" placeholder="Doe" required />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label for="email">Email Address</label>
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      placeholder="jane@example.com"
+      required
+    />
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+    <div class="form-row">
+      <label for="phone">Phone Number</label>
+      <input id="phone" type="tel" formControlName="phone" placeholder="(555) 000-0000" />
+    </div>
+    <div class="form-row">
+      <label for="dateOfBirth">Date of Birth</label>
+      <input id="dateOfBirth" type="date" formControlName="dateOfBirth" required />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label for="address">Physical Address</label>
+    <textarea
+      id="address"
+      formControlName="address"
+      rows="3"
+      placeholder="123 Main St, City, Country"
+    ></textarea>
+  </div>
+
+  <div
+    style="
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #f1f5f9;
+    "
+  >
+    <button type="button" class="btn" (click)="onCancel()">
+      <app-ui-icon name="X" size="14" class="mr-1"></app-ui-icon> Cancel
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="form.invalid || loading()"
+      style="min-width: 120px"
+    >
+      <app-ui-icon name="Save" size="14" class="mr-1"></app-ui-icon>
+      {{ loading() ? 'Saving...' : patient() ? 'Update Patient' : 'Create Patient' }}
+    </button>
+  </div>
+</form>

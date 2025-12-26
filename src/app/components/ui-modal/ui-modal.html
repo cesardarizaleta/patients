@@ -1,0 +1,23 @@
+@if (state().open) {
+  <div class="ui-modal-backdrop">
+    <div class="ui-modal-panel">
+      @if (state().type === 'custom') {
+        <ng-template #customContent></ng-template>
+      }
+      @if (state().type !== 'custom') {
+        <div class="ui-modal-header">
+          <div style="font-weight: 600">{{ state().title }}</div>
+        </div>
+        <div class="ui-modal-body muted">{{ state().message }}</div>
+        <div class="ui-modal-actions">
+          @if (state().type === 'confirm') {
+            <button class="btn" (click)="onCancel()">Cancel</button>
+            <button class="btn btn-primary" (click)="onOk()">Confirm</button>
+          } @else {
+            <button class="btn btn-primary" (click)="onOk()">OK</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

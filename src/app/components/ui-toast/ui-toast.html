@@ -1,0 +1,6 @@
+@for (t of toasts(); track t.id) {
+  <div class="ui-toast-item" [class]="t.type">
+    <div class="ui-toast-message">{{ t.message }}</div>
+    <button class="ui-toast-close btn" (click)="dismiss(t.id)">✕</button>
+  </div>
+}
